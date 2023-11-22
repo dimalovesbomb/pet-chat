@@ -27,7 +27,7 @@ const Div = styled.div<DivProps>`
   box-shadow: ${({ isActive }) => (isActive ? '0px 5px 10px 2px rgba(6, 6, 6, 0.2) inset' : 'none')};
 
   &:hover {
-    box-shadow: 0px 5px 10px 2px rgba(6, 6, 6, 0.2) inset;
+    box-shadow: 0 5px 10px 2px rgba(6, 6, 6, 0.2) inset;
   }
 `;
 

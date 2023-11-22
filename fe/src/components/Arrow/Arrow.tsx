@@ -13,8 +13,8 @@ export const Arrow: React.FC = () => {
       <svg fill={`${colors.font.secondary}`} version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg'
            xmlnsXlink='http://www.w3.org/1999/xlink' width='100%' height='100%' viewBox='0 0 29.77 29.77'
            xmlSpace='preserve'>
-        <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
-        <g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g>
+        <g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
+        <g id='SVGRepo_tracerCarrier' strokeLinecap='round' strokeLinejoin='round'></g>
         <g id='SVGRepo_iconCarrier'>
           <g>
             <path

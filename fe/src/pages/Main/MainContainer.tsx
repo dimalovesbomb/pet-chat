@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { State, User } from '../../shared/types';
+import { State} from '../../shared/types';
 import { socket } from '../../socket';
 import { EventsNames } from '../../socket/eventsNames';
 import {

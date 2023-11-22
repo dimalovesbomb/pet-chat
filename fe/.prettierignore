@@ -1,0 +1,7 @@
+# Add files here to ignore them from prettier formatting
+tools/generators/**/files/**/*
+pact/**/*.json
+coverage/**/*
+dist/**/*
+logs/**/*
+node_modules/**/*

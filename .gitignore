@@ -1,0 +1,55 @@
+
+# dependencies
+*/node_modules
+
+# IDEs and editors
+*/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.iml
+*.xml
+
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+.scannerwork
+test-report.xml
+proxy.conf.json
+**/*/lcov.info
+/pact/logs
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+/**/*/screenshots/**/*
+/apps-e2e/*.js
+/apps-e2e/*.map
+/apps-e2e/**/*/screenshots/**/*
+
+# System Files
+.DS_Store
+Thumbs.db
+.hyperlayout
+.worktrees/
+
+yarn-error\.log
+/bash.exe.stackdump
+
+.worktrees
+.output

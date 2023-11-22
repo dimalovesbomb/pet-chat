@@ -1,0 +1,41 @@
+@import "../../shared/colors";
+
+* {
+  color: $font-primary;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: .5fr 2fr 1fr;
+  grid-template-areas:
+        "header header"
+        "aside main"
+        "aside main"
+        "footer footer";
+  height: 100vh;
+}
+
+.header {
+  grid-area: header;
+  background-color: $background-light;
+  z-index: $z-index-front;
+}
+
+.aside {
+  grid-area: aside;
+  //min-width: 100px;
+}
+
+.main {
+  grid-area: main;
+  z-index: $z-index-middle;
+}
+
+.footer {
+  grid-area: footer;
+  display: flex;
+  justify-content: center;
+  background-color: $background-light;
+  color: $font-secondary;
+}

@@ -3,8 +3,8 @@ import { Server } from 'socket.io';
 import http from 'http';
 import dotenv from 'dotenv';
 import { EventsNames } from './src/eventsNames';
-import { connectedUsers } from './src/connectedUsersMap';
-import { Message, RegisterPayload, RequestMessagePayload } from './src/types';
+import { connectedUsers, getOnlineUsersOnly, onlineUsers } from './src/connectedUsersMap';
+import { Message, RegisterPayload, RequestMessagePayload, User } from './src/types';
 
 dotenv.config();
 
@@ -25,9 +25,9 @@ app.get('/', (req: Request, res: Response) => {
 io.on('connection', (socket) => {
   io.emit(EventsNames.REQUEST_USER_ID);
 
-  //to be refactored
   socket.on(EventsNames.REGISTER_USER, ({ id, name, pic }: RegisterPayload) => {
     connectedUsers[id] = { id, name, pic, messages: [] };
+    onlineUsers[id] = socket.id;
     const userList = Object.values(connectedUsers).map(({ name, id, pic }) => ({
       name,
       id,
@@ -38,13 +38,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on(EventsNames.RECEIVE_USER_ID, (payload: { id: string }) => {
-    if (payload.id) {
-      socket.emit(EventsNames.RECEIVE_USERS_LIST, Object.values(connectedUsers));
-    }
+    onlineUsers[payload.id] = socket.id;
+    socket.emit(EventsNames.RECEIVE_USERS_LIST, getOnlineUsersOnly());
   });
 
   socket.on(EventsNames.REQUEST_USERS_LIST, () => {
-    const userList = Object.values(connectedUsers).map(({ name, id, pic }) => ({
+    const userList = getOnlineUsersOnly().map(({ name, id, pic }) => ({
       name,
       id,
       pic,
@@ -79,12 +78,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on(EventsNames.GET_IS_USER_ONLINE, (payload: { userId: string }) => {
-    console.log(payload);
+    onlineUsers[payload.userId] = socket.id;
   });
 
   socket.on('disconnect', () => {
-    // const onlineUsers = io.sockets.sockets;
-    io.emit(EventsNames.GET_IS_USER_ONLINE);
+    for (const key in onlineUsers) {
+      if (onlineUsers[key] === socket.id) {
+        delete onlineUsers[key];
+      }
+    }
+    io.emit(EventsNames.RECEIVE_USERS_LIST, getOnlineUsersOnly());
   });
 });
 

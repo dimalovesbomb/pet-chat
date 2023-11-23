@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
 });
 io.on('connection', (socket) => {
     io.emit(eventsNames_1.EventsNames.REQUEST_USER_ID);
-    //to be refactored
     socket.on(eventsNames_1.EventsNames.REGISTER_USER, ({ id, name, pic }) => {
         connectedUsersMap_1.connectedUsers[id] = { id, name, pic, messages: [] };
+        connectedUsersMap_1.onlineUsers[id] = socket.id;
         const userList = Object.values(connectedUsersMap_1.connectedUsers).map(({ name, id, pic }) => ({
             name,
             id,
@@ -35,12 +35,12 @@ io.on('connection', (socket) => {
         io.emit(eventsNames_1.EventsNames.RECEIVE_USERS_LIST, userList);
     });
     socket.on(eventsNames_1.EventsNames.RECEIVE_USER_ID, (payload) => {
-        if (payload.id) {
-            socket.emit(eventsNames_1.EventsNames.RECEIVE_USERS_LIST, Object.values(connectedUsersMap_1.connectedUsers));
-        }
+        connectedUsersMap_1.onlineUsers[payload.id] = socket.id;
+        const onlineOnlyUsersData = (0, connectedUsersMap_1.getOnlineUsersOnly)();
+        socket.emit(eventsNames_1.EventsNames.RECEIVE_USERS_LIST, Object.values(onlineOnlyUsersData));
     });
     socket.on(eventsNames_1.EventsNames.REQUEST_USERS_LIST, () => {
-        const userList = Object.values(connectedUsersMap_1.connectedUsers).map(({ name, id, pic }) => ({
+        const userList = (0, connectedUsersMap_1.getOnlineUsersOnly)().map(({ name, id, pic }) => ({
             name,
             id,
             pic,
@@ -69,11 +69,18 @@ io.on('connection', (socket) => {
         socket.emit(eventsNames_1.EventsNames.RECEIVE_STATE, state);
     });
     socket.on(eventsNames_1.EventsNames.GET_IS_USER_ONLINE, (payload) => {
-        console.log(payload);
+        connectedUsersMap_1.onlineUsers[payload.userId] = socket.id;
     });
     socket.on('disconnect', () => {
         // const onlineUsers = io.sockets.sockets;
-        io.emit(eventsNames_1.EventsNames.GET_IS_USER_ONLINE);
+        // io.emit(EventsNames.GET_IS_USER_ONLINE);
+        for (const key in connectedUsersMap_1.onlineUsers) {
+            if (connectedUsersMap_1.onlineUsers[key] === socket.id) {
+                delete connectedUsersMap_1.onlineUsers[key];
+            }
+        }
+        const onlineOnlyUsersData = (0, connectedUsersMap_1.getOnlineUsersOnly)();
+        io.emit(eventsNames_1.EventsNames.RECEIVE_USERS_LIST, Object.values(onlineOnlyUsersData));
     });
 });
 app.listen(port, () => {

@@ -4,7 +4,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { EventsNames } from './src/eventsNames';
 import { connectedUsers, getOnlineUsersOnly, onlineUsers } from './src/connectedUsersMap';
-import { Message, RegisterPayload, RequestMessagePayload, User } from './src/types';
+import { Message, RegisterPayload, RequestMessagePayload } from './src/types';
 
 dotenv.config();
 

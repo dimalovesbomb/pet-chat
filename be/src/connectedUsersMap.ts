@@ -16,3 +16,10 @@ export const connectedUsers: Record<string, User> = {
     ],
   },
 };
+
+export const onlineUsers: Record<string, string> = { '007': 'always online' };
+
+export const getOnlineUsersOnly = (): User[] => {
+  const onlineOnlyKeys = Object.keys(onlineUsers);
+  return onlineOnlyKeys.map((key) => connectedUsers[key]);
+};

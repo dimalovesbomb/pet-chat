@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectedUsers = void 0;
+exports.getOnlineUsersOnly = exports.onlineUsers = exports.connectedUsers = void 0;
 exports.connectedUsers = {
     '007': {
         id: '007',
@@ -17,3 +17,9 @@ exports.connectedUsers = {
         ],
     },
 };
+exports.onlineUsers = { '007': 'always online' };
+const getOnlineUsersOnly = () => {
+    const onlineOnlyKeys = Object.keys(exports.onlineUsers);
+    return onlineOnlyKeys.map((key) => exports.connectedUsers[key]);
+};
+exports.getOnlineUsersOnly = getOnlineUsersOnly;

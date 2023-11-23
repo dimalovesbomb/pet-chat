@@ -98,8 +98,7 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
   }, []);
 
   const onRegistrationSubmit = async () => {
-    // const base64Image = await toBase64(fileValue!);
-    const base64Image = null;
+    const base64Image = await toBase64(fileValue!);
     const createdId = createId();
 
     socket.emit(EventsNames.REGISTER_USER, { id: createdId, name: userName, pic: base64Image || null });

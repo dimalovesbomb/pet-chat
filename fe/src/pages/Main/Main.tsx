@@ -32,7 +32,7 @@ export const Main: React.FC = () => {
 
   return (
     <MainContainer>
-      {({ users, formProps }) => (
+      {({ users, formProps, messages }) => (
         <Container isAsideExpanded={isAsideExpanded}>
           <header className="header">
             <Header />
@@ -41,7 +41,7 @@ export const Main: React.FC = () => {
             <Aside users={users} sizeProps={{ isExpanded: isAsideExpanded, setIsExpanded: setIsAsideExpanded }} />
           </aside>
           <main className="main">
-            <Chat state={users} />
+            <Chat messages={messages} />
           </main>
           <footer className="footer">footer</footer>
           <RegisterModal isOpened={formProps.shouldOpenModal} formProps={formProps}></RegisterModal>

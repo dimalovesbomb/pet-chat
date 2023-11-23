@@ -4,15 +4,12 @@ export interface Attachment {
 }
 
 export interface Message {
+  to: string;
   senderId: string;
   message: string;
   attachments: Attachment[] | null;
   timestamp: number;
 }
-
-export type SendMessage = Message & {
-  to: string;
-};
 
 export interface User {
   id: string;
@@ -26,4 +23,9 @@ export interface RegisterPayload {
   id: string;
   name: string;
   pic: string | null;
+}
+
+export interface RequestMessagePayload {
+  requester: string;
+  messagesOfUser: string;
 }

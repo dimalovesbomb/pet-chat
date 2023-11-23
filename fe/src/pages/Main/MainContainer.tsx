@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { State} from '../../shared/types';
+import { Message, User } from '../../shared/types';
 import { socket } from '../../socket';
 import { EventsNames } from '../../socket/eventsNames';
 import {
@@ -12,7 +12,8 @@ import { createId } from '../../shared/createId';
 import { toBase64 } from '../../shared/imageToBase64';
 
 interface Props {
-  users: State[];
+  users: User[];
+  messages: Message[];
   formProps: {
     inputValue: string;
     setInputValue: (value: string) => void;
@@ -30,7 +31,8 @@ interface MainContainerProps {
 export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const assignedUserId = useRef(JSON.parse(sessionStorage.getItem(SESSION_STORAGE_USER_ID) || '{}'));
-  const [usersList, setUsersList] = useState<State[]>([]);
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [shouldRegister, setShouldRegister] = useState(false);
   const [userName, setUserName] = useState('');
@@ -49,7 +51,8 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
-    socket.on(EventsNames.REQUEST_USER_ID, () => {
+    /////
+    const onRequestUserId = () => {
       initializeSessionStorage();
       const meUser = getMeUser();
       if (!meUser) {
@@ -58,27 +61,47 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
       }
 
       socket.emit(EventsNames.RECEIVE_USER_ID, { id: meUser.id });
-    });
+    };
+    socket.on(EventsNames.REQUEST_USER_ID, onRequestUserId);
 
-    socket.on(EventsNames.RECEIVE_STATE, (payload: State[]) => {
+    /////
+    const onReceiveUsersList = (payload: User[]) => {
       const users = payload.map((user) => ({
         ...user,
         isMe: assignedUserId.current === user.id,
       }));
-
       rewriteState(users);
       setUsersList(users);
-    });
+    };
+    socket.on(EventsNames.RECEIVE_USERS_LIST, onReceiveUsersList);
+
+    /////
+    const onReceiveMessages = (payload: Message[]) => {
+      setMessages(payload);
+    };
+    socket.on(EventsNames.RECEIVE_MESSAGES, onReceiveMessages);
+
+    /////
+    const onCheckIfOnline = () => {
+      socket.emit(EventsNames.GET_IS_USER_ONLINE, { userId: assignedUserId.current });
+    };
+    socket.on(EventsNames.GET_IS_USER_ONLINE, onCheckIfOnline);
 
     return () => {
       socket.off('connect', () => setIsConnected(true));
       socket.off('disconnect', () => setIsConnected(false));
+      socket.off(EventsNames.REQUEST_USER_ID, onRequestUserId);
+      socket.off(EventsNames.RECEIVE_USERS_LIST, onReceiveUsersList);
+      socket.off(EventsNames.RECEIVE_MESSAGES, onReceiveMessages);
+      socket.off(EventsNames.GET_IS_USER_ONLINE, onCheckIfOnline);
     };
   }, []);
 
   const onRegistrationSubmit = async () => {
-    const base64Image = await toBase64(fileValue!);
+    // const base64Image = await toBase64(fileValue!);
+    const base64Image = null;
     const createdId = createId();
+
     socket.emit(EventsNames.REGISTER_USER, { id: createdId, name: userName, pic: base64Image || null });
     assignedUserId.current = createdId;
     sessionStorage.setItem(SESSION_STORAGE_USER_ID, JSON.stringify(createdId));
@@ -87,6 +110,7 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
 
   return children({
     users: usersList,
+    messages,
     formProps: {
       inputValue: userName,
       setInputValue: setUserName,

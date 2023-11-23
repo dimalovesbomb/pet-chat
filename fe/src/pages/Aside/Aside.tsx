@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { State } from '../../shared/types';
+import { User } from '../../shared/types';
 import { AsideSearch, AsideSearchResult } from '../../components/AsideSeachResult/AsideSearchResult';
 import { AsideUserCard } from '../../components/AsideUserCard/AsideUserCard';
 import { Input } from '../../components/Input/Input';
@@ -11,9 +11,11 @@ import { Subheader } from '../../components/Subheader/Subheader';
 import styled from 'styled-components';
 import { Arrow } from '../../components/Arrow/Arrow';
 import { colors } from '../../shared/colors';
+import { getMessages } from '../../socket';
+import { getMeUser } from '../../shared/sessionStorageHelpers';
 
 interface AsideProps {
-  users: State[];
+  users: User[];
   sizeProps: {
     isExpanded: boolean;
     setIsExpanded: (isExpanded: boolean) => void;
@@ -52,11 +54,11 @@ const ExpandButton = styled('button')<ExpandButtonProps>(({ isExpanded }) => {
 export const Aside: React.FC<AsideProps> = ({ users, sizeProps }) => {
   const location = useLocation();
   const [searchValue, setSearchValue] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState<State[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const { isExpanded, setIsExpanded } = sizeProps;
-
   const activeUserId = location.pathname.substring(1);
+  const meUser = getMeUser();
 
   useEffect(() => {
     setSelectedUsers(users);
@@ -72,6 +74,10 @@ export const Aside: React.FC<AsideProps> = ({ users, sizeProps }) => {
     setIsScrolled(e.currentTarget.scrollTop > 0);
   };
 
+  const onUserCardClick = (to: string) => {
+    meUser && getMessages(meUser.id, to);
+  };
+
   return (
     <nav className="aside-container">
       <ExpandButton onClick={() => setIsExpanded(!isExpanded)} isExpanded={isExpanded}>
@@ -81,13 +87,13 @@ export const Aside: React.FC<AsideProps> = ({ users, sizeProps }) => {
         <div>
           <Subheader>Select a user</Subheader>
         </div>
-        <Input value={searchValue} onChange={handleSearchChange} placeholder="Type a username" icon="search" />
+        <Input value={searchValue} onChange={handleSearchChange} placeholder="Type a username" />
       </AsideSearch>
       <AsideSearchResult onScroll={handleScrolled}>
         {!selectedUsers.length && <UserNotFound variant={users.length ? '404' : 'no-user-list'} />}
         {selectedUsers.map(({ name, id, pic, isMe }) => {
           return isMe ? null : (
-            <Li key={id}>
+            <Li key={id} onClick={() => onUserCardClick(id)}>
               <Link to={`/${id}`} isButton>
                 <AsideUserCard name={name} isActive={id === activeUserId} pic={pic} />
               </Link>

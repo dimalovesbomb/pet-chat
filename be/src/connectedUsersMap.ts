@@ -1,7 +1,7 @@
 import { User } from './types';
 
-export let connectedUsers: User[] = [
-  {
+export const connectedUsers: Record<string, User> = {
+  '007': {
     id: '007',
     name: 'Mirror bot',
     pic: null,
@@ -11,7 +11,8 @@ export let connectedUsers: User[] = [
         message: `Hi! I'm a mirror bot! Send me anything here and I'll send it back to you right away!`,
         attachments: null,
         timestamp: Date.now(),
+        to: 'all',
       },
     ],
   },
-];
+};

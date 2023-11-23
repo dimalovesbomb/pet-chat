@@ -2,6 +2,7 @@ export interface User {
   name: string;
   id: string;
   pic: string | null;
+  isMe?: boolean;
 }
 
 export interface Attachment {
@@ -14,6 +15,7 @@ export interface Message {
   message: string;
   attachments: Attachment[] | null;
   timestamp: number;
+  to: string;
 }
 
 export type SendMessage = Message & {
@@ -23,7 +25,7 @@ export type SendMessage = Message & {
 export interface State {
   id: string;
   name: string;
-  pic: string;
-  messages: Message[];
+  pic: string | null;
+  // messages: Message[];
   isMe?: boolean;
 }

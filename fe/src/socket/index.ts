@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { EventsNames } from './eventsNames';
 import { SendMessage } from '../shared/types';
 
@@ -13,6 +13,10 @@ export const socket = io(URL, {
   transports: ['websocket'],
 });
 
-export const sendMessage = (socketInstance: Socket, message: SendMessage) => {
-  socketInstance.emit(EventsNames.SEND_MESSAGE, message);
+export const sendMessage = (message: SendMessage) => {
+  socket.emit(EventsNames.SEND_MESSAGE, message);
+};
+
+export const getMessages = (requester: string, messagesOfUser: string) => {
+  socket.emit(EventsNames.REQUEST_MESSAGES, { requester, messagesOfUser });
 };

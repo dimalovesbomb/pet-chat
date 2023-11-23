@@ -27,7 +27,7 @@ export const MessagesContainer: React.FC<MessagesContainerProps> = ({ messages, 
       <FloatingBackground />
       {!activeUserId && <SelectUserBanner />}
       {activeUserId &&
-        messages.map(({ senderId, message, attachments, timestamp }, index) => {
+        messages.map(({ senderId, message, attachments, timestamp, to }, index) => {
           return (
             <Message
               key={`${senderId}_${timestamp}_${Math.random()}`}
@@ -37,6 +37,7 @@ export const MessagesContainer: React.FC<MessagesContainerProps> = ({ messages, 
               timestamp={timestamp}
               isMe={meId === senderId}
               prevMessageFromSameSender={messages[index - 1]?.senderId === senderId}
+              to={to}
             />
           );
         })}

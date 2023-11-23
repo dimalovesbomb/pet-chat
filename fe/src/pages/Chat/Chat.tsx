@@ -3,11 +3,10 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Input } from '../../components/Input/Input';
 import { colors } from '../../shared/colors';
-import { State } from '../../shared/types';
+import { Message } from '../../shared/types';
 import { MessagesContainer } from '../../components/MessagesContainer/MessagesContainer';
 import { sendMessage } from '../../socket';
 import { getMeUser } from '../../shared/sessionStorageHelpers';
-import { socket } from '../../socket';
 
 const ChatContainer = styled.div`
   display: grid;
@@ -27,25 +26,24 @@ const InputContainer = styled.form`
 `;
 
 interface ChatProps {
-  state: State[];
+  messages: Message[];
 }
 
-export const Chat: React.FC<ChatProps> = ({ state }) => {
+export const Chat: React.FC<ChatProps> = ({ messages }) => {
   const location = useLocation();
-  const [currMessages, setCurrMessages] = useState<State[]>([]);
+  const [currMessages, setCurrMessages] = useState<Message[]>([]);
   const activeUserId = location.pathname.substring(1);
   const [inputValue, setInputValue] = useState('');
-  const messages = currMessages.find((user) => user.id === activeUserId)?.messages || [];
   const meUser = getMeUser();
 
   useEffect(() => {
-    setCurrMessages(state);
-  }, [state]);
+    setCurrMessages(messages);
+  }, [messages]);
 
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setInputValue('');
-    sendMessage(socket, {
+    sendMessage({
       to: activeUserId,
       senderId: meUser?.id || '',
       message: inputValue,
@@ -56,7 +54,7 @@ export const Chat: React.FC<ChatProps> = ({ state }) => {
 
   return (
     <ChatContainer>
-      <MessagesContainer messages={messages} activeUserId={activeUserId} meId={meUser?.id || ''} />
+      <MessagesContainer messages={currMessages} activeUserId={activeUserId} meId={meUser?.id || ''} />
       {activeUserId && (
         <InputContainer onSubmit={handleOnSubmit}>
           <Input

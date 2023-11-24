@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { FloatingBackground } from '../FloatingBackground/FloatingBackground';
 import { SelectUserBanner } from '../SelectUserBanner/SelectUserBanner';
 import { Message } from '../Message/Message';
@@ -12,7 +12,7 @@ const MessagesContainerDiv = styled.div`
   grid-area: messages;
   position: relative;
   height: 100%;
-  padding: 0 20px;
+  padding: 20px 20px 0 20px;
 `;
 
 interface MessagesContainerProps {
@@ -21,26 +21,28 @@ interface MessagesContainerProps {
   meId: string;
 }
 
-export const MessagesContainer: React.FC<MessagesContainerProps> = ({ messages, activeUserId, meId }) => {
-  return (
-    <MessagesContainerDiv>
-      <FloatingBackground />
-      {!activeUserId && <SelectUserBanner />}
-      {activeUserId &&
-        messages.map(({ senderId, message, attachments, timestamp, to }, index) => {
-          return (
-            <Message
-              key={`${senderId}_${timestamp}_${Math.random()}`}
-              senderId={senderId}
-              message={message}
-              attachments={attachments}
-              timestamp={timestamp}
-              isMe={meId === senderId}
-              prevMessageFromSameSender={messages[index - 1]?.senderId === senderId}
-              to={to}
-            />
-          );
-        })}
-    </MessagesContainerDiv>
-  );
-};
+export const MessagesContainer = forwardRef<HTMLDivElement, MessagesContainerProps>(
+  ({ messages, activeUserId, meId }, ref) => {
+    return (
+      <MessagesContainerDiv ref={ref}>
+        <FloatingBackground />
+        {!activeUserId && <SelectUserBanner />}
+        {activeUserId &&
+          messages.map(({ senderId, message, attachments, timestamp, to }, index) => {
+            return (
+              <Message
+                key={`${senderId}_${timestamp}_${Math.random()}`}
+                senderId={senderId}
+                message={message}
+                attachments={attachments}
+                timestamp={timestamp}
+                isMe={meId === senderId}
+                prevMessageFromSameSender={messages[index - 1]?.senderId === senderId}
+                to={to}
+              />
+            );
+          })}
+      </MessagesContainerDiv>
+    );
+  },
+);

@@ -45,7 +45,8 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
     };
     const onDisconnect = () => {
       setIsConnected(false);
-      socket.connect();
+      // @ts-ignore
+      socket.io.reconnect();
     };
 
     socket.on('connect', onConnect);
@@ -80,6 +81,7 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
       setMessages(payload);
     };
     socket.on(EventsNames.RECEIVE_MESSAGES, onReceiveMessages);
+    socket.on(EventsNames.SEND_MESSAGE, onReceiveMessages);
 
     /////
     const onCheckIfOnline = () => {
@@ -88,17 +90,20 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
     socket.on(EventsNames.GET_IS_USER_ONLINE, onCheckIfOnline);
 
     return () => {
-      socket.off('connect', () => setIsConnected(true));
-      socket.off('disconnect', () => setIsConnected(false));
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
       socket.off(EventsNames.REQUEST_USER_ID, onRequestUserId);
       socket.off(EventsNames.RECEIVE_USERS_LIST, onReceiveUsersList);
       socket.off(EventsNames.RECEIVE_MESSAGES, onReceiveMessages);
+      socket.off(EventsNames.SEND_MESSAGE, onReceiveMessages);
       socket.off(EventsNames.GET_IS_USER_ONLINE, onCheckIfOnline);
     };
   }, []);
 
   const onRegistrationSubmit = async () => {
-    const base64Image = await toBase64(fileValue!);
+    // validation/pic is off for now
+    // const base64Image = await toBase64(fileValue!);
+    const base64Image = null;
     const createdId = createId();
 
     socket.emit(EventsNames.REGISTER_USER, { id: createdId, name: userName, pic: base64Image || null });

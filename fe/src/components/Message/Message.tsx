@@ -67,7 +67,10 @@ export const Message: React.FC<MessageProps> = ({
   isMe,
   prevMessageFromSameSender,
 }) => {
-  const sentTime = new Date(timestamp).toLocaleDateString();
+  const hours = new Date(timestamp).getHours();
+  const minutes = new Date(timestamp).getMinutes();
+  const seconds = new Date(timestamp).getSeconds();
+  const sentTime = `${hours}:${minutes}:${seconds}`;
 
   return (
     <MessageContainer isMe={isMe} prevMessageFromSameSender={prevMessageFromSameSender}>

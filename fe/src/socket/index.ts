@@ -11,6 +11,7 @@ const URL = 'http://localhost:4001';
 export const socket = io(URL, {
   autoConnect: false,
   transports: ['websocket'],
+  reconnection: true,
 });
 
 export const sendMessage = (message: SendMessage) => {

@@ -46,10 +46,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpened, formProp
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.length && !!fileValue) {
-      setFileValue(fileValue);
-      onSubmit();
-    }
+    // validation is off for now
+    // if (inputValue.length && !!fileValue) {
+    //   setFileValue(fileValue);
+    //   onSubmit();
+    // }
+    onSubmit();
   };
   return (
     <Modal isOpened={isOpened} headerTitle="Looks like we need to register you!">

@@ -1,0 +1,14 @@
+{
+  "id": "007",
+  "name": "Mirror bot",
+  "pic": null,
+  "messages": [
+    {
+      "to": "all",
+      "senderId": "007",
+      "message": "Hello! this is a mirror bot!",
+      "attachments": null,
+      "timestamp": 1700832641090
+    }
+  ]
+}

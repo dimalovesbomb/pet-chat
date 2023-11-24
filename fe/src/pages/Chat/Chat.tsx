@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Input } from '../../components/Input/Input';
@@ -31,13 +31,13 @@ interface ChatProps {
 
 export const Chat: React.FC<ChatProps> = ({ messages }) => {
   const location = useLocation();
-  const [currMessages, setCurrMessages] = useState<Message[]>([]);
   const activeUserId = location.pathname.substring(1);
   const [inputValue, setInputValue] = useState('');
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const meUser = getMeUser();
 
   useEffect(() => {
-    setCurrMessages(messages);
+    messagesContainerRef.current?.scrollTo(0, document.body.scrollHeight);
   }, [messages]);
 
   const handleOnSubmit = (e: React.FormEvent) => {
@@ -54,7 +54,12 @@ export const Chat: React.FC<ChatProps> = ({ messages }) => {
 
   return (
     <ChatContainer>
-      <MessagesContainer messages={currMessages} activeUserId={activeUserId} meId={meUser?.id || ''} />
+      <MessagesContainer
+        messages={messages}
+        activeUserId={activeUserId}
+        meId={meUser?.id || ''}
+        ref={messagesContainerRef}
+      />
       {activeUserId && (
         <InputContainer onSubmit={handleOnSubmit}>
           <Input

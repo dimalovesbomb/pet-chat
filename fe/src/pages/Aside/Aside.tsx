@@ -61,6 +61,10 @@ export const Aside: React.FC<AsideProps> = ({ users, sizeProps }) => {
   const meUser = getMeUser();
 
   useEffect(() => {
+    onUserCardClick(activeUserId);
+  }, []);
+
+  useEffect(() => {
     setSelectedUsers(users);
   }, [users]);
 

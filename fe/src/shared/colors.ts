@@ -20,9 +20,6 @@ export const colors = {
     hover: '#1f2c33',
   },
   zIndex: {
-    front: 10,
-    middle: 5,
-    behind: 1,
-    modal: 11,
+    modal: 2,
   },
 };

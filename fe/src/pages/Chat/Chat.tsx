@@ -10,7 +10,7 @@ import { getMeUser } from '../../shared/sessionStorageHelpers';
 
 const ChatContainer = styled.div`
   display: grid;
-  grid-template-rows: 0.93fr 0.07fr;
+  grid-template-rows: 10fr 1fr;
   grid-template-columns: 1fr;
   grid-template-areas:
     'messages messages'
@@ -22,7 +22,7 @@ const ChatContainer = styled.div`
 const InputContainer = styled.form`
   display: flex;
   grid-area: input;
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 
 interface ChatProps {

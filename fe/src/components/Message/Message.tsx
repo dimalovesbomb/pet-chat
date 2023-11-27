@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { colors } from '../../shared/colors';
 import { Message as IMessage } from '../../shared/types';
+import { Modal } from '../Modal/Modal';
+import { getUser } from '../../shared/sessionStorageHelpers';
+import { MAX_LENGTH_OF_MESSAGE } from '../../shared/constants';
 
 type MessageProps = IMessage & {
   isMe: boolean;
@@ -13,11 +16,9 @@ const MessageContainer = styled('div')<{ isMe: boolean; prevMessageFromSameSende
     alignSelf: isMe ? 'flex-end' : 'flex-start',
     backgroundColor: isMe ? colors.green.dark : colors.componentsBackground.hover,
     borderRadius: '5px',
-    maxHeight: '200px',
-    maxWidth: '300px',
-    width: '100%',
+    minWidth: '100px',
+    maxWidth: '450px',
     padding: '10px',
-    zIndex: colors.zIndex.front,
 
     display: 'flex',
     flexDirection: 'column',
@@ -28,6 +29,7 @@ const MessageContainer = styled('div')<{ isMe: boolean; prevMessageFromSameSende
 
 const Text = styled.p`
   margin: 0;
+  word-wrap: break-word;
 `;
 
 const AttachmentsContainer = styled.div`
@@ -53,10 +55,27 @@ const Image = styled.img`
   width: 100%;
 `;
 
+const InfoContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: end;
+`;
+
+const ShowMoreButton = styled.button`
+  border: none;
+  background-color: transparent;
+  text-decoration: underline;
+  font-size: 10px;
+  cursor: pointer;
+`;
+
 const Info = styled.p`
   font-size: 10px;
-  align-self: flex-end;
-  margin: 0;
+  margin: 0 0 0 10px;
+`;
+
+const FullMessageModal = styled.div`
+  overflow-y: scroll;
 `;
 
 export const Message: React.FC<MessageProps> = ({
@@ -67,26 +86,59 @@ export const Message: React.FC<MessageProps> = ({
   isMe,
   prevMessageFromSameSender,
 }) => {
-  const hours = new Date(timestamp).getHours();
-  const minutes = new Date(timestamp).getMinutes();
-  const seconds = new Date(timestamp).getSeconds();
+  const [shouldShowFullMessageModal, setShouldShowFullMessageModal] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const truncatedMessage = useMemo(
+    () => (message.length > MAX_LENGTH_OF_MESSAGE ? `${message.substring(0, MAX_LENGTH_OF_MESSAGE)}...` : message),
+    [message],
+  );
+
+  const { hours, minutes, seconds } = {
+    hours: new Date(timestamp).getHours(),
+    minutes: new Date(timestamp).getMinutes(),
+    seconds: new Date(timestamp).getSeconds(),
+  };
   const sentTime = `${hours}:${minutes}:${seconds}`;
+  const senderName = getUser(senderId)?.name;
+
+  useEffect(() => {
+    if (message.length > 500) {
+      setShouldShowFullMessageModal(true);
+    }
+  }, [message]);
 
   return (
-    <MessageContainer isMe={isMe} prevMessageFromSameSender={prevMessageFromSameSender}>
-      <Text>{message}</Text>
-      {attachments && (
-        <AttachmentsContainer>
-          {attachments.map((att) => {
-            return (
-              <ImageContainer>
-                <Image src={att.src} />
-              </ImageContainer>
-            );
-          })}
-        </AttachmentsContainer>
-      )}
-      <Info>{sentTime}</Info>
-    </MessageContainer>
+    <>
+      <MessageContainer isMe={isMe} prevMessageFromSameSender={prevMessageFromSameSender}>
+        <Text>{truncatedMessage}</Text>
+        {attachments && (
+          <AttachmentsContainer>
+            {attachments.map((att) => {
+              return (
+                <ImageContainer>
+                  <Image src={att.src} />
+                </ImageContainer>
+              );
+            })}
+          </AttachmentsContainer>
+        )}
+        <InfoContainer>
+          {shouldShowFullMessageModal && (
+            <ShowMoreButton onClick={() => setIsModalOpened(true)}>Open full message</ShowMoreButton>
+          )}
+          <Info>{sentTime}</Info>
+        </InfoContainer>
+      </MessageContainer>
+      <Modal
+        closable
+        onClose={() => setIsModalOpened(false)}
+        isOpened={isModalOpened}
+        headerTitle={senderName ? `Message from ${senderName}` : ''}
+      >
+        <FullMessageModal>
+          <p>{message}</p>
+        </FullMessageModal>
+      </Modal>
+    </>
   );
 };

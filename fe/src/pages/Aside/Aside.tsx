@@ -35,7 +35,6 @@ const ExpandButton = styled('button')<ExpandButtonProps>(({ isExpanded }) => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: colors.zIndex.front,
 
     position: 'absolute',
     top: '10px',

@@ -55,17 +55,19 @@ const ModalInner = styled.div`
   border-bottom: 2px solid ${colors.green.light};
   border-radius: 5px;
   padding: 10px;
+  z-index: ${colors.zIndex.modal};
 `;
 
 const ModalHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: auto;
-  height: 30px;
+  min-height: 30px;
+  padding-bottom: 5px;
   border-bottom: 1px solid ${colors.green.light};
 `;
 
-const MobileHeader = styled.h3`
+const ModalHeader = styled.h3`
   display: flex;
   margin: 0;
   padding: 0;
@@ -86,22 +88,29 @@ const CloseButton = styled.button`
 `;
 
 export const Modal: React.FC<ModalProps> = ({ isOpened, headerTitle, closable = false, onClose, children }) => {
-  if (isOpened) {
-    return (
-      <ModalOuter role="modal">
-        <ModalInner>
-          <ModalHeaderContainer>
-            <MobileHeader>{headerTitle}</MobileHeader>
-            {closable && (
-              <CloseButton onClick={onClose}>
-                <CloseIcon />
-              </CloseButton>
-            )}
-          </ModalHeaderContainer>
-          {children}
-        </ModalInner>
-      </ModalOuter>
-    );
+  const onClickOutsideModal = () => {
+    if (closable && onClose) {
+      onClose();
+    }
+  };
+
+  if (!isOpened) {
+    return null;
   }
-  return null;
+
+  return (
+    <ModalOuter role="modal" onClick={onClickOutsideModal}>
+      <ModalInner onClick={(e) => e.stopPropagation()}>
+        <ModalHeaderContainer>
+          <ModalHeader>{headerTitle}</ModalHeader>
+          {closable && onClose && (
+            <CloseButton onClick={onClose}>
+              <CloseIcon />
+            </CloseButton>
+          )}
+        </ModalHeaderContainer>
+        {children}
+      </ModalInner>
+    </ModalOuter>
+  );
 };

@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ text }) => {
           <Button onClick={() => setIsModalOpened(true)}>Clear all data and log out</Button>
         </div>
       </HeaderContainer>
-      <LogoutModal isOpened={isModalOpened} />
+      <LogoutModal isOpened={isModalOpened} onClose={() => setIsModalOpened(false)} />
     </>
   );
 };

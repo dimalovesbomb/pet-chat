@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Aside } from '../Aside/Aside';
 import { Header } from '../../components/Header/Header';
-import './Main.scss';
 import { MainContainer } from './MainContainer';
 import { Chat } from '../Chat/Chat';
 import styled from 'styled-components';
 import { RegisterModal } from '../RegisterModal/RegisterModal';
+import { Footer } from '../../components/Footer/Footer';
+import './Main.scss';
 
 interface ContainerProps {
   isAsideExpanded: boolean;
@@ -43,7 +44,9 @@ export const Main: React.FC = () => {
           <main className="main">
             <Chat messages={messages} />
           </main>
-          <footer className="footer">footer</footer>
+          <footer className="footer">
+            <Footer />
+          </footer>
           <RegisterModal isOpened={formProps.shouldOpenModal} formProps={formProps}></RegisterModal>
         </Container>
       )}

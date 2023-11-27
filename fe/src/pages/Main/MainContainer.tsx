@@ -45,6 +45,7 @@ export const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
     };
     const onDisconnect = () => {
       setIsConnected(false);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       socket.io.reconnect();
     };

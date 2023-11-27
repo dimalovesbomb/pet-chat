@@ -6,6 +6,7 @@ import { removeUserId, rewriteState } from '../../shared/sessionStorageHelpers';
 
 interface LogoutModalProps {
   isOpened: boolean;
+  onClose: () => void;
 }
 
 const ModalContainer = styled.div`
@@ -15,7 +16,7 @@ const ModalContainer = styled.div`
   align-items: center;
 `;
 
-export const LogoutModal: React.FC<LogoutModalProps> = ({ isOpened }) => {
+export const LogoutModal: React.FC<LogoutModalProps> = ({ isOpened, onClose }) => {
   const headerTitle = 'Are you sure?';
   const handleOnClick = () => {
     rewriteState([]);
@@ -24,7 +25,7 @@ export const LogoutModal: React.FC<LogoutModalProps> = ({ isOpened }) => {
   };
 
   return (
-    <Modal isOpened={isOpened} headerTitle={headerTitle}>
+    <Modal isOpened={isOpened} headerTitle={headerTitle} closable onClose={onClose}>
       <ModalContainer>
         <h3>
           Don't be afraid, everything is stored in sessionStorage, so once you close this app - data will be deleted

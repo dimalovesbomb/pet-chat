@@ -2,6 +2,9 @@
 
 Monorepo for React/SocketIO/NodeJS pet-project
 
+## How to play around?
+Run the project, create a user, open incognito tab to create a second user, select active user at the left, and try the chat :)
+
 How to run:
 
 ```

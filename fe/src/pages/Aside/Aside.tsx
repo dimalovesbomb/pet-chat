@@ -14,7 +14,7 @@ import { colors } from '../../shared/colors';
 import { getMessages } from '../../socket';
 import { getMeUser } from '../../shared/sessionStorageHelpers';
 
-interface AsideProps {
+export interface AsideProps {
   users: User[];
   sizeProps: {
     isExpanded: boolean;

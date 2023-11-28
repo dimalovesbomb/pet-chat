@@ -33,6 +33,7 @@ test-report.xml
 proxy.conf.json
 **/*/lcov.info
 /pact/logs
+*/coverage
 
 # e2e
 /e2e/*.js

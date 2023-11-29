@@ -67,7 +67,7 @@ describe('Aside', () => {
     expect(screen.queryByText('Vasia')).not.toBeInTheDocument();
   });
 
-  it('Should call getMeUser on init', function () {
+  it('Should call getMeUser on init', () => {
     sessionStorage.setItem(
       SESSION_STORAGE_KEY,
       JSON.stringify({

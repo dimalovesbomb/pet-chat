@@ -93,12 +93,11 @@ export const Message: React.FC<MessageProps> = ({
     [message],
   );
 
-  const { hours, minutes, seconds } = {
+  const { hours, minutes } = {
     hours: new Date(timestamp).getHours(),
     minutes: new Date(timestamp).getMinutes(),
-    seconds: new Date(timestamp).getSeconds(),
   };
-  const sentTime = `${hours}:${minutes}:${seconds}`;
+  const sentTime = `${hours}:${minutes}`;
   const senderName = getUser(senderId)?.name;
 
   useEffect(() => {
@@ -116,7 +115,7 @@ export const Message: React.FC<MessageProps> = ({
             {attachments.map((att) => {
               return (
                 <ImageContainer>
-                  <Image src={att.src} />
+                  <Image src={att.src} alt={att.src} />
                 </ImageContainer>
               );
             })}

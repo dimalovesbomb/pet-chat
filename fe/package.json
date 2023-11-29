@@ -25,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint-staged": "lint-staged --config lint-staged.js",
+    "lint-staged": "lint-staged --config lint-staged.mjs",
     "prepare": "cd ../ && husky install fe/.husky"
   },
   "eslintConfig": {

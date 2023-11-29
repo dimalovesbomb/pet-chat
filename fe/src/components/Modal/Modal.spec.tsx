@@ -45,7 +45,7 @@ describe('Modal', () => {
     expect(mockOnClose).toBeCalled();
   });
 
-  it('should not render modal if isOpened === false', function () {
+  it('Should not render modal if isOpened === false', () => {
     render(
       <Modal isOpened={false} headerTitle="Test title">
         {modalChildren}

@@ -1,22 +1,31 @@
 import React, { isValidElement } from 'react';
 import styled from 'styled-components';
 import { colors } from '../../shared/colors';
+import { InputErrorMessage } from '../InputErrorMessage/InputErrorMessage';
 
 interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   icon?: 'search' | React.ReactElement;
+  required?: boolean;
+  error?: string;
 }
 
-const InputContainer = styled.div`
-  display: flex;
+const ComponentContainer = styled.div`
   position: relative;
-  border: 2px solid ${colors.green.light};
-  border-radius: 5px;
   width: 100%;
-  background-color: ${colors.componentsBackground.primary};
 `;
+
+const InputContainer = styled('div')<{ hasError: boolean }>(({ hasError }) => {
+  return {
+    display: 'flex',
+    position: 'relative',
+    border: `2px solid ${hasError ? colors.red.primary : colors.green.light}`,
+    borderRadius: '5px',
+    backgroundColor: colors.componentsBackground.primary,
+  };
+});
 
 const IconContainer = styled.div`
   margin: auto;
@@ -37,6 +46,12 @@ const InputBase = styled.input`
   &:placeholder-shown {
     text-overflow: ellipsis;
   }
+`;
+
+const ErrorMessageContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 0;
 `;
 
 const SVG = () => {
@@ -66,7 +81,7 @@ const SVG = () => {
   );
 };
 
-export const Input: React.FC<InputProps> = ({ value, onChange, placeholder, icon }) => {
+export const Input: React.FC<InputProps> = ({ value, onChange, placeholder, icon, required = false, error }) => {
   const renderIcon = () => {
     if (icon === 'search') {
       return (
@@ -82,9 +97,12 @@ export const Input: React.FC<InputProps> = ({ value, onChange, placeholder, icon
   };
 
   return (
-    <InputContainer>
-      <InputBase value={value} onChange={onChange} placeholder={placeholder} />
-      {renderIcon()}
-    </InputContainer>
+    <ComponentContainer>
+      <InputContainer hasError={!!error}>
+        <InputBase value={value} onChange={onChange} placeholder={placeholder} required={required} />
+        {renderIcon()}
+      </InputContainer>
+      <ErrorMessageContainer>{error && <InputErrorMessage>{error}</InputErrorMessage>}</ErrorMessageContainer>
+    </ComponentContainer>
   );
 };
